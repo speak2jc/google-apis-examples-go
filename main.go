@@ -23,6 +23,7 @@ func main() {
 func containerDetails(projectID string, zone string) {
 	//================
 	// Get auth token
+	//================
 
 	token, err := internal.GetAuthToken(projectID)
 	if err != nil {
@@ -32,6 +33,7 @@ func containerDetails(projectID string, zone string) {
 
 	//================
 	// Find clusters
+	//================
 
 	clusterID := "cluster-abc"
 	clusters, err := internal.FindClustersForProject(projectID, "-")
@@ -48,7 +50,11 @@ func containerDetails(projectID string, zone string) {
 	}
 	log.Infof("Cluster: %s", cluster.Endpoint)
 
-	// Get endpoint IP address for a given cluster within a project in any zone
+	//==============================================
+	// Get endpoint IP address for a given cluster
+	// within a project in any zone
+	//==============================================
+
 	ip, err := internal.GetIpForCluster(projectID, clusterID)
 	if err != nil {
 		log.Error(err)
@@ -62,6 +68,7 @@ func container_analysis(projectID string) {
 
 	//================
 	// Common
+	//================
 
 	resourceURL := "https://gcr.io/explorer-273804/vulnerabilities-tutorial-image"
 	timeout := time.Duration(10) * time.Second
@@ -77,6 +84,7 @@ func container_analysis(projectID string) {
 
 	//================
 	// Find notes
+	//================
 
 	notes, err := internal.FindNotesForProject(projectID)
 	if err != nil {
@@ -86,6 +94,7 @@ func container_analysis(projectID string) {
 
 	//================
 	// Create note
+	//================
 
 	if len(notes) == 0 {
 		note1, err := internal.CreateNote(projectID)
@@ -95,8 +104,9 @@ func container_analysis(projectID string) {
 		log.Info(note1)
 	}
 
-	//================
+	//===============================
 	// Find occurrences for criteria
+	//===============================
 
 	occurrences1, err := internal.FindOccurrencesForCriteria(projectID,
 		"vulnerabilities-tutorial-image",
@@ -119,8 +129,9 @@ func container_analysis(projectID string) {
 	}
 	log.Info(occurrences2)
 
-	//================
+	//===================
 	// Create occurrence
+	//===================
 
 	if false {
 		occurrence1, err := internal.CreateOccurrence(projectID)
@@ -132,6 +143,7 @@ func container_analysis(projectID string) {
 
 	//================
 	// Poll
+	//================
 
 	occ1, err := internal.PollDiscoveryOccurrenceFinished(resourceURL, projectID, timeout)
 	if err != nil {

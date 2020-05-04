@@ -14,6 +14,7 @@ import (
 )
 
 func GetAuthToken(projectID string) (token string, err error) {
+
 	ctx := context.Background()
 	client, err := iamcredentials1.NewIamCredentialsClient(ctx)
 	if err != nil {
@@ -21,10 +22,12 @@ func GetAuthToken(projectID string) (token string, err error) {
 	}
 	defer client.Close()
 
+	scope := []string{"full-control"}
+	//projects/-/serviceAccounts/{ACCOUNT_EMAIL_OR_UNIQUEID}
 	req := &credentials.GenerateAccessTokenRequest{
-		Name:      "explorer-sa@explorer-273804.iam.gserviceaccount.com",
+		Name:      fmt.Sprintf("projects/-/serviceAccounts/explorer-sa@%s.iam.gserviceaccount.com", projectID),
 		Delegates: []string{},
-		Scope:     []string{},
+		Scope:     scope,
 		Lifetime:  nil,
 	}
 
