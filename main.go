@@ -16,10 +16,7 @@ func main() {
 
 	serviceAccountKeyfilePath := fmt.Sprintf("/Users/jamez/code/go/src/github.com/speak2jc/google-apis-examples-go/keyfiles/%s.json", projectID)
 	os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", serviceAccountKeyfilePath)
-
 	containerDetails(projectID, zone)
-
-	//container_analysis(projectID)
 
 }
 
@@ -40,6 +37,7 @@ func containerDetails(projectID string, zone string) {
 	clusters, err := internal.FindClustersForProject(projectID, "-")
 	if err != nil {
 		log.Error(err)
+		return
 	}
 	log.Infof("Clusters: %s", clusters)
 	var cluster *container.Resource
@@ -50,11 +48,13 @@ func containerDetails(projectID string, zone string) {
 	}
 	log.Infof("Cluster: %s", cluster.Endpoint)
 
-	//cluster, err := internal.FindCluster(projectID, clusterID, zone)
-	//if err != nil {
-	//	log.Error(err)
-	//}
-	//log.Infof("Cluster: %s", cluster)
+	// Get endpoint IP address for a given cluster within a project in any zone
+	ip, err := internal.GetIpForCluster(projectID, clusterID)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	log.Infof("IP address for cluster %s is %s", clusterID, *ip)
 
 }
 
